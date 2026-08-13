@@ -660,7 +660,18 @@
       var dotEls = chapters.map(function(_, i){
         var dot = document.createElement('div');
         dot.className = 'cosmos-progress-dot';
+        dot.type = 'button';
+        dot.setAttribute('role', 'button');
+        dot.setAttribute('tabindex', '0');
+        dot.setAttribute('aria-label', 'Gehe zu Kapitel ' + (i + 1));
         dot.style.top = (totalChapters > 1 ? (i / (totalChapters - 1)) * 100 : 0) + '%';
+        dot.addEventListener('click', function(){ goToChapter(i); });
+        dot.addEventListener('keydown', function(event){
+          if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+            event.preventDefault();
+            goToChapter(i);
+          }
+        });
         if (dotsEl) dotsEl.appendChild(dot);
         return dot;
       });
