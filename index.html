@@ -365,7 +365,7 @@
   @media (max-width: 640px){
     .cosmos-scroll-indicator{
       top:auto;
-      bottom:var(--space-4);
+      bottom:calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
       right:var(--space-3);
       transform:none;
       gap:10px;
@@ -379,7 +379,12 @@
   /* Fixed viewport-filling slide — no scroll-through range. Wheel/touch/keyboard
      input is captured by JS and advances chapters directly (see script), so there
      is nothing here for the browser itself to scroll. */
-  .cosmos-enhanced .cosmos-intro{ position:fixed; inset:0; height:100vh; }
+  /* 100vh includes the area behind a mobile browser's address/toolbar chrome.
+     Since this section locks normal scrolling, that chrome never collapses
+     the way it would on an ordinary scrollable page, so anything anchored
+     near the bottom edge (like the scroll indicator) can end up hidden
+     underneath it. 100dvh tracks the actual visible viewport instead. */
+  .cosmos-enhanced .cosmos-intro{ position:fixed; inset:0; height:100vh; height:100dvh; }
   .cosmos-enhanced .cosmos-pin{ position:relative; height:100%; }
   /* Three.js loads its modules from a CDN at runtime, so there's a brief window
      after .cosmos-enhanced is applied where the scene isn't built yet. Keep the
