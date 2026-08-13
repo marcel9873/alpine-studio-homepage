@@ -220,25 +220,26 @@
     top:50%;
     transform:translate(-50%,-50%);
     align-items:center;
-    gap:10px;
+    gap:var(--space-4);
     z-index:1;
   }
   html.cosmos-enhanced .header-progress{ display:flex; }
-  .header-dot{
-    width:8px;
-    height:8px;
+  .header-chapter-link{
+    appearance:none;
+    background:none;
+    border:none;
     padding:0;
-    border-radius:50%;
-    background:var(--summit-navy-2);
-    border:2px solid rgba(255,255,255,0.4);
     cursor:pointer;
-    transition:background-color .3s ease, border-color .3s ease, transform .3s ease;
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    font-weight:500;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:rgba(246,248,250,0.5);
+    transition:color .25s ease;
   }
-  .header-dot.is-active{
-    background:var(--flare);
-    border-color:var(--flare);
-    transform:scale(1.3);
-  }
+  .header-chapter-link:hover{ color:rgba(246,248,250,0.85); }
+  .header-chapter-link.is-active{ color:var(--flare); }
 
   @media (max-width: 480px){
     .nav-bar{ padding-inline:var(--space-2); }
@@ -469,7 +470,11 @@
       <a class="btn btn-primary" href="https://ig.me/m/alpinestudio_official" target="_blank" rel="noopener" data-en="Start a project">Projekt anfragen</a>
     </div>
   </div>
-  <div class="header-progress" data-header-dots></div>
+  <nav class="header-progress" aria-label="Kapitel">
+    <button type="button" class="header-chapter-link" data-header-chapter data-en="Base Camp">Basislager</button>
+    <button type="button" class="header-chapter-link" data-header-chapter data-en="Ascent">Aufstieg</button>
+    <button type="button" class="header-chapter-link" data-header-chapter data-en="Summit">Gipfel</button>
+  </nav>
 </header>
 
 <main id="main">
@@ -709,15 +714,9 @@
         return dot;
       });
 
-      var headerDotsEl = document.querySelector('[data-header-dots]');
-      var headerDotEls = chapters.map(function(_, i){
-        var dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'header-dot';
-        dot.setAttribute('aria-label', 'Gehe zu Kapitel ' + (i + 1));
-        dot.addEventListener('click', function(){ goToChapter(i); });
-        if (headerDotsEl) headerDotsEl.appendChild(dot);
-        return dot;
+      var headerLinkEls = Array.prototype.slice.call(document.querySelectorAll('[data-header-chapter]'));
+      headerLinkEls.forEach(function(el, i){
+        el.addEventListener('click', function(){ goToChapter(i); });
       });
 
       var scene = new THREE.Scene();
@@ -931,7 +930,7 @@
         if (counterEl) counterEl.textContent = String(currentIndex).padStart(2, '0') + ' / ' + String(totalChapters - 1).padStart(2, '0');
         if (progressFill) progressFill.style.height = (totalChapters > 1 ? (currentIndex / (totalChapters - 1)) * 100 : 0) + '%';
         dotEls.forEach(function(dot, i){ dot.classList.toggle('is-active', i === currentIndex); });
-        headerDotEls.forEach(function(dot, i){ dot.classList.toggle('is-active', i === currentIndex); });
+        headerLinkEls.forEach(function(el, i){ el.classList.toggle('is-active', i === currentIndex); });
       }
 
       // Mountains previously flew away / faded out once "the summit" chapter was
