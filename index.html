@@ -334,17 +334,10 @@
     letter-spacing:0.1em;
     color:rgba(246,248,250,0.6);
   }
-  .scroll-label{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:2px;
-    text-align:center;
-  }
+  .scroll-label,
+  [data-cosmos-counter],
   .scroll-arrow{
-    color:var(--flare);
-    margin-top:4px;
-    animation:scrollArrowBounce 1.6s ease-in-out infinite;
+    display:none !important;
   }
   @keyframes scrollArrowBounce{
     0%, 100%{ transform:translateY(0); }
@@ -494,18 +487,10 @@
       </div>
 
       <div class="cosmos-scroll-indicator" data-cosmos-indicator>
-        <div class="scroll-label">
-          <span data-en="Scroll">Scroll</span>
-          <span data-en="down">nach unten</span>
-          <svg class="scroll-arrow" width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true">
-            <path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="cosmos-progress-track">
+        <div class="cosmos-progress-track" aria-hidden="true">
           <div class="cosmos-progress-fill" data-cosmos-progress></div>
           <div class="cosmos-progress-dots" data-cosmos-dots></div>
         </div>
-        <span data-cosmos-counter>00 / 02</span>
       </div>
     </div>
   </section>
