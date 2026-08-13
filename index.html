@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-en="Alpine Studio — Websites for companies that want to make an impact">Alpine Studio — Websites für Unternehmen, die etwas bewegen wollen</title>
+<meta name="description" content="Alpine Studio entwirft und entwickelt Websites für Unternehmen: von Konzept und Design bis Launch und laufender Betreuung." data-en="Alpine Studio designs and builds websites for companies: from concept and design to launch and ongoing support.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230E1A2B'/%3E%3Cpath d='M6 21 L13 10 L17 16 L20 12 L26 21 Z' fill='none' stroke='%23FF5A1F' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<style>
+  :root{
+    --summit-navy:#0E1A2B;
+    --summit-navy-2:#152439;
+    --card:#1C2E4A;
+    --card-border:rgba(255,255,255,0.12);
+    --ink:#0A0F1A;
+    --mist:#AAB8CC;
+    --flare:#FF5A1F;
+    --flare-dark:#C93F0E;
+    --flare-light:#FF7A47;
+    --white:#FFFFFF;
+
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+
+    --space-1:8px;
+    --space-2:16px;
+    --space-3:24px;
+    --space-4:32px;
+    --space-5:48px;
+    --space-6:64px;
+    --space-7:96px;
+
+    --max-width:1200px;
+    --radius:6px;
+    --radius-lg:10px;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+  }
+  body{
+    margin:0;
+    font-family:var(--font-body);
+    color:var(--white);
+    background:var(--summit-navy);
+    line-height:1.6;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; }
+  ul{ list-style:none; margin:0; padding:0; }
+  h1,h2,h3,p{ margin:0; }
+  button{ font:inherit; }
+
+  .container{
+    width:100%;
+    max-width:var(--max-width);
+    margin-inline:auto;
+    padding-inline:var(--space-3);
+  }
+
+  /* Skip link */
+  .skip-link{
+    position:absolute;
+    left:var(--space-2);
+    top:-100px;
+    background:var(--flare);
+    color:var(--summit-navy);
+    font-weight:700;
+    padding:var(--space-1) var(--space-2);
+    border-radius:var(--radius);
+    z-index:1000;
+    transition:top .2s ease;
+  }
+  .skip-link:focus{ top:var(--space-2); }
+
+  /* Focus visibility */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible{
+    outline:3px solid var(--flare);
+    outline-offset:2px;
+    border-radius:2px;
+  }
+
+  /* Eyebrow / mono labels */
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    display:inline-flex;
+    align-items:center;
+    gap:var(--space-1);
+    color:var(--flare);
+    font-weight:500;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px;
+    height:7px;
+    background:var(--flare);
+    border-radius:1px;
+    transform:rotate(45deg);
+    flex:none;
+  }
+  h1,h2,h3{ font-family:var(--font-display); font-weight:600; letter-spacing:-0.01em; }
+
+  section{ padding-block:var(--space-7); }
+
+  /* Buttons */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:var(--space-1);
+    font-family:var(--font-body);
+    font-weight:700;
+    font-size:0.95rem;
+    padding:0.85em 1.5em;
+    border-radius:var(--radius);
+    border:1.5px solid transparent;
+    cursor:pointer;
+    text-decoration:none;
+    transition:transform .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:var(--flare);
+    color:var(--summit-navy);
+  }
+  .btn-primary:hover{ background:#ffe0d1; transform:translateY(-2px); }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:500;
+    background:rgba(14,26,43,0.72);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    transition:background-color .3s ease;
+  }
+  .nav-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding-block:var(--space-2);
+    max-width:none;
+    padding-inline:var(--space-5);
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.15rem;
+    color:var(--white);
+    text-decoration:none;
+  }
+  .logo .mark{ flex:none; }
+  .logo .mark path{ stroke:var(--flare); }
+
+  .nav-actions{ display:flex; align-items:center; gap:var(--space-3); }
+
+  .lang-switch{
+    display:flex;
+    align-items:center;
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:999px;
+    padding:3px;
+    gap:2px;
+    flex:none;
+  }
+  .lang-switch button{
+    appearance:none;
+    background:none;
+    border:none;
+    color:rgba(246,248,250,0.65);
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    font-weight:500;
+    letter-spacing:0.04em;
+    padding:5px 11px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background-color .2s ease, color .2s ease;
+  }
+  .lang-switch button:hover{ color:var(--white); }
+  .lang-switch button[aria-pressed="true"]{
+    background:var(--flare);
+    color:var(--summit-navy);
+  }
+
+  @media (max-width: 480px){
+    .nav-bar{ padding-inline:var(--space-2); }
+    .logo{ font-size:1rem; gap:6px; }
+    .logo .mark{ width:22px; height:22px; }
+    .nav-actions{ gap:6px; }
+    .lang-switch button{ padding:5px 8px; font-size:0.68rem; }
+    .nav-actions .btn-primary{ padding:0.65em 0.85em; font-size:0.82rem; }
+  }
+
+  /* ---------- Cosmos Intro (scroll-driven 3D sequence) ---------- */
+  .cosmos-intro{
+    position:relative;
+    background:var(--summit-navy);
+    color:var(--white);
+    padding-block:0; /* override the generic section{} padding — the canvas/pin must be
+                         flush against the header, chapters handle their own inner spacing */
+  }
+  .cosmos-pin{ position:relative; overflow:hidden; }
+  .cosmos-canvas{
+    display:none;
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    /* A hairline seam can appear at the render buffer's own edge on some GPUs.
+       Scaling slightly past the clipped parent bounds pushes it out of view. */
+    transform:scale(1.02);
+    transform-origin:center;
+  }
+  .cosmos-fallback-glow{
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(ellipse at 50% 25%, rgba(255,138,74,0.12), transparent 60%),
+      linear-gradient(180deg, var(--summit-navy) 0%, var(--summit-navy-2) 100%);
+    pointer-events:none;
+  }
+  .cosmos-chapter{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding-block:var(--space-7);
+  }
+  .cosmos-chapter-inner{
+    position:relative;
+    z-index:2;
+    max-width:720px;
+  }
+  /* The 3D scene behind this text shifts brightness as it animates/scrolls, so a fixed
+     text color can't reliably guarantee contrast against it — a shadow acts as a safety
+     net, the same technique used for subtitles over video. */
+  .cosmos-chapter-inner .eyebrow,
+  .cosmos-title,
+  .cosmos-subtitle .subtitle-line{
+    text-shadow: 0 2px 20px rgba(4,7,14,0.85), 0 1px 4px rgba(4,7,14,0.9);
+  }
+  .cosmos-chapter.center .cosmos-chapter-inner{
+    max-width:640px;
+    margin-inline:auto;
+    text-align:center;
+  }
+  .cosmos-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    letter-spacing:-0.01em;
+    font-size:clamp(2.4rem, 1.6rem + 3.2vw, 4.2rem);
+    line-height:1.06;
+    margin-top:var(--space-2);
+  }
+  .cosmos-title .title-word{ display:inline-block; white-space:nowrap; }
+  .cosmos-title .title-char{ display:inline-block; }
+  .cosmos-subtitle{ margin-top:var(--space-3); }
+  .cosmos-subtitle .subtitle-line{
+    margin:0;
+    font-size:1.15rem;
+    color:rgba(246,248,250,0.82);
+    max-width:52ch;
+  }
+  .cosmos-chapter.center .cosmos-subtitle .subtitle-line{ max-width:none; }
+  .hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:var(--space-2);
+    margin-top:var(--space-4);
+  }
+  .cosmos-chapter.center .hero-actions{ justify-content:center; }
+  .hero-stats{
+    display:flex;
+    flex-wrap:wrap;
+    gap:var(--space-5);
+    margin-top:var(--space-6);
+    padding-top:var(--space-4);
+  }
+  .hero-stats .stat-value{
+    font-family:var(--font-display);
+    font-size:1.7rem;
+    font-weight:700;
+    color:var(--white);
+  }
+  .hero-stats .stat-label{
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    color:rgba(246,248,250,0.6);
+    margin-top:4px;
+  }
+
+  .cosmos-scroll-indicator{
+    display:none;
+    position:absolute;
+    right:var(--space-4);
+    bottom:var(--space-4);
+    z-index:3;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:8px;
+    font-family:var(--font-mono);
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    color:rgba(246,248,250,0.6);
+  }
+  .cosmos-progress-track{ width:2px; height:64px; background:rgba(255,255,255,0.18); }
+  .cosmos-progress-fill{ width:100%; height:0%; background:var(--flare); }
+
+  /* Enhanced state — added by JS only after prefers-reduced-motion + WebGL checks pass,
+     so the layout mode is decided synchronously before any async Three.js loading starts
+     (no layout shift once the scene actually renders). */
+  /* Fixed viewport-filling slide — no scroll-through range. Wheel/touch/keyboard
+     input is captured by JS and advances chapters directly (see script), so there
+     is nothing here for the browser itself to scroll. */
+  .cosmos-enhanced .cosmos-intro{ position:fixed; inset:0; height:100vh; }
+  .cosmos-enhanced .cosmos-pin{ position:relative; height:100%; }
+  .cosmos-enhanced .cosmos-canvas{ display:block; }
+  .cosmos-enhanced .cosmos-fallback-glow{ display:none; }
+  .cosmos-enhanced .cosmos-chapter{
+    position:absolute;
+    inset:0;
+    min-height:0;
+    opacity:0;
+    pointer-events:none;
+  }
+  .cosmos-enhanced .cosmos-chapter[data-chapter="0"]{ opacity:1; pointer-events:auto; }
+  .cosmos-enhanced .cosmos-scroll-indicator{ display:flex; }
+
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main" data-en="Skip to content">Zum Inhalt springen</a>
+
+<header>
+  <div class="container nav-bar">
+    <a class="logo" href="#top">
+      <svg class="mark" width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <path d="M4 18 L10.5 8 L14 13.5 L17 9.5 L22 18 Z" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      Alpine Studio
+    </a>
+
+    <div class="nav-actions">
+      <div class="lang-switch" role="group" aria-label="Sprache / Language">
+        <button type="button" data-lang-btn="de" aria-pressed="true">DE</button>
+        <button type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="btn btn-primary" href="https://ig.me/m/alpinestudio_official" target="_blank" rel="noopener" data-en="Start a project">Projekt anfragen</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ================= COSMOS INTRO ================= -->
+  <section class="cosmos-intro" id="top" data-cosmos-intro>
+    <div class="cosmos-pin">
+      <canvas class="cosmos-canvas" data-cosmos-canvas aria-hidden="true"></canvas>
+      <div class="cosmos-fallback-glow" aria-hidden="true"></div>
+
+      <div class="cosmos-chapter" data-chapter="0">
+        <div class="container cosmos-chapter-inner">
+          <span class="eyebrow" data-en="Alpine Studio">Alpine Studio</span>
+          <h1 class="cosmos-title" data-split data-en="Clear Lines. Websites, Ready to Launch.">Klare Linien. Startklare Websites.</h1>
+          <div class="cosmos-subtitle">
+            <p class="subtitle-line" data-en="Alpine Studio designs and builds websites for companies">Alpine Studio entwirft und baut Websites für Unternehmen,</p>
+            <p class="subtitle-line" data-en="that want to be just as convincing online as in real life.">die online genauso überzeugen wollen wie im echten Leben.</p>
+          </div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://ig.me/m/alpinestudio_official" target="_blank" rel="noopener" data-en="Start a project">Projekt anfragen</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="cosmos-chapter center" data-chapter="1">
+        <div class="container cosmos-chapter-inner">
+          <span class="eyebrow" data-en="Outlook">Ausblick</span>
+          <h2 class="cosmos-title" data-split data-en="Clear Sight, Not a Blind Flight.">Weitblick statt Blindflug.</h2>
+          <div class="cosmos-subtitle">
+            <p class="subtitle-line" data-en="The real work begins beyond the first idea —">Jenseits der ersten Idee beginnt die eigentliche Arbeit —</p>
+            <p class="subtitle-line" data-en="we're with you every step to the finished website.">wir begleiten jeden Schritt bis zur fertigen Website.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cosmos-chapter center" data-chapter="2">
+        <div class="container cosmos-chapter-inner">
+          <span class="eyebrow" data-en="Destination">Ziel</span>
+          <h2 class="cosmos-title" data-split data-en="Arrived at the Summit.">Am Gipfel angekommen.</h2>
+          <div class="cosmos-subtitle">
+            <p class="subtitle-line" data-en="What you get isn't just a website,">Am Ende steht nicht nur eine Website,</p>
+            <p class="subtitle-line" data-en="it's a tool that grows with you.">sondern ein Werkzeug, das mit Ihnen wächst.</p>
+          </div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://ig.me/m/alpinestudio_official" target="_blank" rel="noopener" data-en="Get in touch">Kontakt aufnehmen</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="cosmos-scroll-indicator" data-cosmos-indicator>
+        <span data-en="Scroll">Scroll</span>
+        <div class="cosmos-progress-track"><div class="cosmos-progress-fill" data-cosmos-progress></div></div>
+        <span data-cosmos-counter>00 / 02</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<script>
+  // DE/EN language switch. Runs before the cosmos script so [data-split] titles are
+  // split into .title-char spans in the *correct* language before anything else reads
+  // them (the entrance animation, the ScrollTrigger crossfade targets, etc.).
+  (function(){
+    var STORAGE_KEY = 'alpineLang';
+
+    function splitTitle(el){
+      var words = el.textContent.split(' ');
+      var html = words.map(function(word){
+        var chars = word.split('').map(function(ch){
+          return '<span class="title-char">' + ch + '</span>';
+        }).join('');
+        return '<span class="title-word">' + chars + '</span>';
+      }).join(' ');
+      el.innerHTML = html;
+    }
+
+    var textEls = Array.prototype.slice.call(document.querySelectorAll('[data-en]:not(meta)'));
+    textEls.forEach(function(el){
+      if (el.dataset.de === undefined) el.dataset.de = el.textContent;
+    });
+
+    var ariaEls = Array.prototype.slice.call(document.querySelectorAll('[data-en-aria]'));
+    ariaEls.forEach(function(el){
+      if (el.dataset.deAria === undefined) el.dataset.deAria = el.getAttribute('aria-label');
+    });
+
+    var descEl = document.querySelector('meta[name="description"][data-en]');
+    var descDe = descEl ? descEl.getAttribute('content') : null;
+    var descEn = descEl ? descEl.getAttribute('data-en') : null;
+
+    var langBtns = Array.prototype.slice.call(document.querySelectorAll('[data-lang-btn]'));
+
+    function applyLang(lang){
+      document.documentElement.lang = lang;
+
+      textEls.forEach(function(el){
+        el.textContent = (lang === 'en') ? el.dataset.en : el.dataset.de;
+      });
+      ariaEls.forEach(function(el){
+        el.setAttribute('aria-label', (lang === 'en') ? el.getAttribute('data-en-aria') : el.dataset.deAria);
+      });
+      if (descEl) descEl.setAttribute('content', (lang === 'en') ? descEn : descDe);
+
+      document.querySelectorAll('[data-split]').forEach(splitTitle);
+
+      langBtns.forEach(function(btn){
+        btn.setAttribute('aria-pressed', btn.getAttribute('data-lang-btn') === lang ? 'true' : 'false');
+      });
+    }
+
+    var stored = null;
+    try { stored = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    applyLang(stored === 'en' ? 'en' : 'de');
+
+    langBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var lang = btn.getAttribute('data-lang-btn');
+        applyLang(lang);
+        try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+      });
+    });
+  })();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script>
+  // Site-wide smooth scroll (Lenis), tied into GSAP's ticker.
+  // Loaded via CDN, no build step. Skipped entirely under prefers-reduced-motion —
+  // native, instant scroll takes over.
+  (function(){
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    if (typeof gsap === 'undefined') return;
+
+    var hasScrollTrigger = typeof ScrollTrigger !== 'undefined';
+    if (hasScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+    if (typeof Lenis === 'undefined') return;
+    try {
+      var lenis = new Lenis();
+
+      if (hasScrollTrigger) lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function(time){ lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+
+      // Route in-page anchor links (nav, CTAs) through Lenis so jumps use the same easing
+      var headerEl = document.querySelector('header');
+      document.querySelectorAll('a[href^="#"]').forEach(function(a){
+        a.addEventListener('click', function(e){
+          var id = a.getAttribute('href');
+          if (!id || id.length < 2) return;
+          var target = document.querySelector(id);
+          if (!target) return;
+          e.preventDefault();
+          var headerOffset = headerEl ? headerEl.offsetHeight : 0;
+          lenis.scrollTo(target, { offset: -(headerOffset + 12) });
+          history.pushState(null, '', id);
+        });
+      });
+    } catch (err) {
+      console.warn('Lenis Smooth-Scroll konnte nicht initialisiert werden, native Scroll bleibt aktiv.', err);
+    }
+  })();
+</script>
+
+<script>
+  // Cosmos Intro — scroll-driven Three.js scene (starfield, nebula, parallax mountains,
+  // atmosphere glow, bloom) behind three text chapters. Vanilla port of a React/Three.js
+  // component, loaded via CDN import map (see <head>), no build step.
+  //
+  // Progressive enhancement: the reduced-motion + WebGL check runs synchronously and
+  // decides the layout mode (pinned 300vh vs. plain stacked sections) *before* Three.js
+  // starts loading, so there is no layout shift once the scene appears. Without JS, or
+  // if either check fails, all three chapters stay fully readable in normal document flow.
+  (function(){
+    var introEl = document.querySelector('[data-cosmos-intro]');
+    if (!introEl) return;
+
+    // [data-split] titles are already split into .title-char spans by the language
+    // script above (it owns splitting, since it has to re-split on every language toggle).
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function hasWebGL(){
+      try {
+        var c = document.createElement('canvas');
+        return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+      } catch (e) { return false; }
+    }
+
+    if (reduceMotion || !hasWebGL()) return; // static, stacked, fully readable fallback stays
+
+    document.documentElement.classList.add('cosmos-enhanced');
+
+    initCosmos().catch(function(err){
+      console.warn('Cosmos-Intro (3D) konnte nicht geladen werden, statische Ansicht bleibt aktiv.', err);
+      document.documentElement.classList.remove('cosmos-enhanced');
+    });
+
+    async function initCosmos(){
+      var THREE = await import('three');
+      var EffectComposerMod = await import('three/addons/postprocessing/EffectComposer.js');
+      var RenderPassMod = await import('three/addons/postprocessing/RenderPass.js');
+      var UnrealBloomPassMod = await import('three/addons/postprocessing/UnrealBloomPass.js');
+      var EffectComposer = EffectComposerMod.EffectComposer;
+      var RenderPass = RenderPassMod.RenderPass;
+      var UnrealBloomPass = UnrealBloomPassMod.UnrealBloomPass;
+
+      var canvas = document.querySelector('[data-cosmos-canvas]');
+      var chapters = Array.prototype.slice.call(introEl.querySelectorAll('.cosmos-chapter'));
+      var progressFill = introEl.querySelector('[data-cosmos-progress]');
+      var counterEl = introEl.querySelector('[data-cosmos-counter]');
+      var totalChapters = chapters.length;
+
+      var scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x000000, 0.00025);
+
+      var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+      camera.position.set(0, 20, 100);
+
+      // alpha:false — UnrealBloomPass's composite pass doesn't reliably preserve the alpha
+      // channel, which leaves a transparent canvas (and nothing visible) when combined with
+      // alpha:true. Painting our own navy as the opaque clear color avoids that entirely.
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+      renderer.setClearColor(0x0e1a2b, 1);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 0.5;
+
+      var composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      var bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.35, 0.4, 0.6);
+      composer.addPass(bloomPass);
+
+      // ---- Starfield: 3 depth layers, warm/cool accent stars drawn from the brand palette ----
+      var stars = [];
+      var starCount = 5000;
+      for (var layer = 0; layer < 3; layer++){
+        var geometry = new THREE.BufferGeometry();
+        var positions = new Float32Array(starCount * 3);
+        var colors = new Float32Array(starCount * 3);
+        var sizes = new Float32Array(starCount);
+
+        for (var j = 0; j < starCount; j++){
+          var radius = 200 + Math.random() * 800;
+          var theta = Math.random() * Math.PI * 2;
+          var phi = Math.acos(Math.random() * 2 - 1);
+          // Stars near the poles of this sphere (phi close to 0 or PI) land close to the
+          // x=0,y=0 axis in world space. The starfield only ever rotates around that same
+          // axis, so such a star barely moves on screen no matter the time — if it's also
+          // ever close to the camera's depth, real GPUs can rasterize that near-degenerate
+          // point as a stretched streak instead of a dot (this is the "ray"). Keeping every
+          // star at least ~0.2 rad off both poles guarantees a real xy offset, so it always
+          // projects as an ordinary point.
+          phi = Math.min(Math.max(phi, 0.2), Math.PI - 0.2);
+
+          positions[j * 3] = radius * Math.sin(phi) * Math.cos(theta);
+          positions[j * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+          positions[j * 3 + 2] = radius * Math.cos(phi);
+
+          var color = new THREE.Color();
+          var choice = Math.random();
+          if (choice < 0.7) color.setHSL(0, 0, 0.8 + Math.random() * 0.2);        // white
+          else if (choice < 0.9) color.setHSL(0.06, 0.55, 0.78);                   // flare/amber accent
+          else color.setHSL(0.58, 0.4, 0.8);                                       // ice-blue accent
+
+          colors[j * 3] = color.r; colors[j * 3 + 1] = color.g; colors[j * 3 + 2] = color.b;
+          sizes[j] = Math.random() * 2 + 0.5;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+        var starMaterial = new THREE.ShaderMaterial({
+          uniforms: { time: { value: 0 }, depth: { value: layer } },
+          vertexShader:
+            'attribute float size; attribute vec3 color; varying vec3 vColor; uniform float time; uniform float depth;' +
+            'void main(){ vColor = color; vec3 pos = position;' +
+            'float angle = time * 0.05 * (1.0 - depth * 0.3);' +
+            'mat2 rot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));' +
+            'pos.xy = rot * pos.xy;' +
+            'vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);' +
+            'gl_PointSize = size * (300.0 / max(-mvPosition.z, 110.0));' +
+            'gl_Position = projectionMatrix * mvPosition;' +
+            'if (-mvPosition.z < 110.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }' +
+            // Because the camera never rolls or yaws (it always looks straight down -Z),
+            // any star near world-X 0 projects to screen-center regardless of its depth —
+            // across thousands of randomly placed stars, there is always a cluster of them
+            // satisfying that, and additive blending + bloom fuses them into what looks
+            // like a solid vertical ray. Dropping the thin sliver of stars whose projected
+            // position falls in that dead-center column removes the effect at its source.
+            // The band widens with the point's own screen radius so large (near) points
+            // cannot poke out past the edge of the exclusion zone.
+            'float ndcX = gl_Position.x / gl_Position.w;' +
+            'float band = 0.028 + gl_PointSize / 1000.0;' +
+            'if (abs(ndcX) < band) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }' +
+            '}',
+          fragmentShader:
+            'varying vec3 vColor;' +
+            'void main(){ float dist = length(gl_PointCoord - vec2(0.5)); if (dist > 0.5) discard;' +
+            'float opacity = 1.0 - smoothstep(0.0, 0.5, dist);' +
+            'gl_FragColor = vec4(vColor, opacity); }',
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+
+        var starPoints = new THREE.Points(geometry, starMaterial);
+        scene.add(starPoints);
+        stars.push(starPoints);
+      }
+
+      // ---- Nebula: brand-colored aurora plane (deep indigo -> flare orange) ----
+      var nebulaGeometry = new THREE.PlaneGeometry(8000, 4000, 100, 100);
+      var nebulaMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+          color1: { value: new THREE.Color(0x0a1a35) },
+          color2: { value: new THREE.Color(0xff5a1f) },
+          opacity: { value: 0.09 }
+        },
+        vertexShader:
+          'varying vec2 vUv; varying float vElevation; uniform float time;' +
+          'void main(){ vUv = uv; vec3 pos = position;' +
+          'float elevation = sin(pos.x * 0.01 + time) * cos(pos.y * 0.01 + time) * 20.0;' +
+          'pos.z += elevation; vElevation = elevation;' +
+          'gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0); }',
+        fragmentShader:
+          'uniform vec3 color1; uniform vec3 color2; uniform float opacity; uniform float time;' +
+          'varying vec2 vUv; varying float vElevation;' +
+          'void main(){ float mixFactor = sin(vUv.x * 10.0 + time) * cos(vUv.y * 10.0 + time);' +
+          'vec3 color = mix(color1, color2, mixFactor * 0.5 + 0.5);' +
+          'float alpha = opacity * (1.0 - length(vUv - 0.5) * 2.0);' +
+          'alpha *= 1.0 + vElevation * 0.01;' +
+          'gl_FragColor = vec4(color, alpha); }',
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+      var nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
+      nebula.position.z = -1050;
+      scene.add(nebula);
+
+      // ---- Mountains: 4 layers, our navy family deepening toward a hazy far ridge ----
+      var mountainLayers = [
+        { distance: -50,  height: 60,  color: 0x0a0f1a, opacity: 1 },
+        { distance: -100, height: 80,  color: 0x0e1a2b, opacity: 0.85 },
+        { distance: -150, height: 100, color: 0x152439, opacity: 0.6 },
+        { distance: -200, height: 120, color: 0x2c4a6e, opacity: 0.35 }
+      ];
+      var mountains = [];
+      mountainLayers.forEach(function(layerDef, index){
+        var points = [];
+        var segments = 50;
+        for (var s = 0; s <= segments; s++){
+          var x = (s / segments - 0.5) * 1000;
+          var y = Math.sin(s * 0.1) * layerDef.height + Math.sin(s * 0.05) * layerDef.height * 0.5 +
+                  Math.random() * layerDef.height * 0.2 - 100;
+          points.push(new THREE.Vector2(x, y));
+        }
+        points.push(new THREE.Vector2(5000, -300));
+        points.push(new THREE.Vector2(-5000, -300));
+
+        var shape = new THREE.Shape(points);
+        var mountainGeometry = new THREE.ShapeGeometry(shape);
+        var mountainMaterial = new THREE.MeshBasicMaterial({
+          color: layerDef.color, transparent: true, opacity: layerDef.opacity, side: THREE.DoubleSide
+        });
+        var mountain = new THREE.Mesh(mountainGeometry, mountainMaterial);
+        mountain.position.z = layerDef.distance;
+        mountain.position.y = layerDef.distance;
+        mountain.userData = { baseZ: layerDef.distance, index: index };
+        scene.add(mountain);
+        mountains.push(mountain);
+      });
+
+      // ---- Atmosphere glow ----
+      var atmosphereGeometry = new THREE.SphereGeometry(600, 32, 32);
+      var atmosphereMaterial = new THREE.ShaderMaterial({
+        uniforms: { time: { value: 0 } },
+        vertexShader:
+          'varying vec3 vNormal;' +
+          'void main(){ vNormal = normalize(normalMatrix * normal);' +
+          'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+        fragmentShader:
+          'varying vec3 vNormal; uniform float time;' +
+          'void main(){ float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);' +
+          'vec3 atmosphere = vec3(0.35, 0.55, 0.85) * intensity;' +
+          'float pulse = sin(time * 2.0) * 0.1 + 0.9; atmosphere *= pulse;' +
+          'gl_FragColor = vec4(atmosphere, intensity * 0.025); }',
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+      });
+      scene.add(new THREE.Mesh(atmosphereGeometry, atmosphereMaterial));
+
+      // ---- Camera targets per chapter ----
+      // z:-700 (the original "fly past the mountains" value) put the camera behind
+      // all four mountain layers — since the lookAt target is a fixed (0,10,-600),
+      // that flips the view direction away from them entirely once the camera passes
+      // z:-600, which is what emptied the frame. Staying in front of the nearest layer
+      // (z:-50) keeps a clean silhouette in every chapter, matching 0->1.
+      var cameraPositions = [
+        { x: 0, y: 30, z: 300 },
+        { x: 0, y: 40, z: -50 },
+        { x: 0, y: 110, z: 20 }
+      ];
+      var smoothCameraPos = { x: 0, y: 30, z: 100 };
+
+      // ---- Discrete slide navigation ----
+      // Each wheel tick / swipe / arrow key advances exactly one chapter, with a fixed
+      // animated crossfade — not a continuous scroll-scrubbed transition. Input is
+      // locked out for the duration of the transition so a single fast scroll gesture
+      // can't skip past a chapter.
+      var currentIndex = 0;
+      var isAnimating = false;
+      var TRANSITION_DURATION = 0.7;
+
+      function updateIndicator(){
+        if (counterEl) counterEl.textContent = String(currentIndex).padStart(2, '0') + ' / ' + String(totalChapters - 1).padStart(2, '0');
+        if (progressFill) progressFill.style.height = (totalChapters > 1 ? (currentIndex / (totalChapters - 1)) * 100 : 0) + '%';
+      }
+
+      // Mountains previously flew away / faded out once "the summit" chapter was
+      // reached, but that made chapter 2->3 feel inconsistent with the clean 1->2
+      // transition (where nothing happens to them) — they now just stay put at their
+      // base position across all chapters, same as any other chapter change.
+
+      function goToChapter(nextIndex){
+        if (isAnimating || nextIndex < 0 || nextIndex >= totalChapters || nextIndex === currentIndex) return;
+        var fromEl = chapters[currentIndex];
+        var toEl = chapters[nextIndex];
+        currentIndex = nextIndex;
+        isAnimating = true;
+
+        updateIndicator();
+
+        // The camera used to drift toward its target via per-frame exponential smoothing,
+        // independent of the text/mountain tweens' fixed duration. Exponential smoothing
+        // is front-loaded (biggest step on the very first frames), so the camera could
+        // race past the mountains within ~150ms while everything else was still animating
+        // over 700ms — that mismatch, not the mountains themselves, was what made them
+        // vanish early. Tweening the camera on the same clock fixes that.
+        var cur = cameraPositions[currentIndex] || cameraPositions[0];
+        if (typeof gsap !== 'undefined'){
+          gsap.to(smoothCameraPos, { x: cur.x, y: cur.y, z: cur.z, duration: TRANSITION_DURATION, ease: 'power2.inOut' });
+        } else {
+          smoothCameraPos.x = cur.x; smoothCameraPos.y = cur.y; smoothCameraPos.z = cur.z;
+        }
+
+        if (typeof gsap !== 'undefined'){
+          var tl = gsap.timeline({ onComplete: function(){ isAnimating = false; } });
+          tl.to(fromEl, { opacity: 0, duration: TRANSITION_DURATION, ease: 'power2.inOut' }, 0)
+            .to(toEl, { opacity: 1, duration: TRANSITION_DURATION, ease: 'power2.inOut' }, 0);
+          fromEl.style.pointerEvents = 'none';
+          toEl.style.pointerEvents = 'auto';
+        } else {
+          fromEl.style.opacity = 0;
+          fromEl.style.pointerEvents = 'none';
+          toEl.style.opacity = 1;
+          toEl.style.pointerEvents = 'auto';
+          isAnimating = false;
+        }
+      }
+
+      updateIndicator();
+
+      // Opening flourish: camera starts a little further back and glides in to chapter
+      // 0's resting position, roughly alongside the title's own entrance animation.
+      if (typeof gsap !== 'undefined'){
+        gsap.to(smoothCameraPos, { x: cameraPositions[0].x, y: cameraPositions[0].y, z: cameraPositions[0].z, duration: 2, ease: 'power2.out', delay: 0.2 });
+      } else {
+        smoothCameraPos.x = cameraPositions[0].x;
+        smoothCameraPos.y = cameraPositions[0].y;
+        smoothCameraPos.z = cameraPositions[0].z;
+      }
+
+      var WHEEL_COOLDOWN = 750;
+      var wheelLocked = false;
+      function advance(direction){
+        if (wheelLocked || isAnimating) return;
+        wheelLocked = true;
+        setTimeout(function(){ wheelLocked = false; }, WHEEL_COOLDOWN);
+        goToChapter(currentIndex + direction);
+      }
+      // Wheel/touch deltas need a magnitude filter (trackpad micro-jitter fires many
+      // near-zero events); a keypress is already a single deliberate action and needs none.
+      function handleAdvance(delta, threshold){
+        if (Math.abs(delta) < threshold) return;
+        advance(delta > 0 ? 1 : -1);
+      }
+
+      window.addEventListener('wheel', function(e){
+        e.preventDefault();
+        handleAdvance(e.deltaY, 4);
+      }, { passive: false });
+
+      var touchStartY = null;
+      window.addEventListener('touchstart', function(e){
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      window.addEventListener('touchmove', function(e){ e.preventDefault(); }, { passive: false });
+      window.addEventListener('touchend', function(e){
+        if (touchStartY === null) return;
+        var dy = touchStartY - e.changedTouches[0].clientY;
+        touchStartY = null;
+        handleAdvance(dy, 30);
+      });
+
+      window.addEventListener('keydown', function(e){
+        if (e.key === 'ArrowDown' || e.key === 'PageDown'){ e.preventDefault(); advance(1); }
+        else if (e.key === 'ArrowUp' || e.key === 'PageUp'){ e.preventDefault(); advance(-1); }
+      });
+
+      // ---- Entrance animation for chapter 0 (mirrors the reference's on-load stagger) ----
+      if (typeof gsap !== 'undefined'){
+        var chapter0 = chapters[0];
+        var tl = gsap.timeline({ delay: 0.2 });
+        var chars = chapter0.querySelectorAll('.title-char');
+        var lines = chapter0.querySelectorAll('.subtitle-line');
+        var rest = chapter0.querySelectorAll('.hero-actions, .hero-stats');
+        tl.from(chars, { y: 60, opacity: 0, duration: 0.9, stagger: 0.02, ease: 'power4.out' })
+          .from(lines, { y: 30, opacity: 0, duration: 0.7, stagger: 0.12, ease: 'power3.out' }, '-=0.5')
+          .from(rest, { y: 24, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' }, '-=0.4');
+      }
+
+      // ---- Render loop ----
+      function animate(){
+        requestAnimationFrame(animate);
+        var time = Date.now() * 0.001;
+
+        stars.forEach(function(field){ if (field.material.uniforms) field.material.uniforms.time.value = time; });
+        if (nebula.material.uniforms) nebula.material.uniforms.time.value = time * 0.5;
+        if (atmosphereMaterial.uniforms) atmosphereMaterial.uniforms.time.value = time;
+
+        // smoothCameraPos itself is now driven by a GSAP tween in goToChapter(),
+        // synced to the same duration as the text/mountain crossfade — this loop just
+        // reads its current (possibly mid-tween) value and adds the idle float on top.
+        var floatX = Math.sin(time * 0.1) * 2;
+        var floatY = Math.cos(time * 0.15) * 1;
+        camera.position.x = smoothCameraPos.x + floatX;
+        camera.position.y = smoothCameraPos.y + floatY;
+        camera.position.z = smoothCameraPos.z;
+        camera.lookAt(0, 10, -600);
+
+        mountains.forEach(function(mountain, i){
+          var parallaxFactor = 1 + i * 0.5;
+          mountain.position.x = Math.sin(time * 0.1) * 2 * parallaxFactor;
+          mountain.position.y = 50 + Math.cos(time * 0.15) * 1 * parallaxFactor;
+        });
+        // Keep the nebula glued just behind the farthest mountain layer, including
+        // while that layer is mid-flight (GSAP-tweened away for the summit chapter).
+        nebula.position.z = mountains[3] ? mountains[3].position.z - 100 : -1050;
+
+        composer.render();
+      }
+      animate();
+
+      window.addEventListener('resize', function(){
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
