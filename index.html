@@ -334,6 +334,14 @@
     letter-spacing:0.1em;
     color:rgba(246,248,250,0.6);
   }
+  .scroll-arrow{
+    color:var(--flare);
+    animation:scrollArrowBounce 1.6s ease-in-out infinite;
+  }
+  @keyframes scrollArrowBounce{
+    0%, 100%{ transform:translateY(0); opacity:0.6; }
+    50%{ transform:translateY(5px); opacity:1; }
+  }
   .cosmos-progress-track{
     position:relative;
     width:2px;
@@ -479,6 +487,9 @@
 
       <div class="cosmos-scroll-indicator" data-cosmos-indicator>
         <span data-en="Scroll">Scroll</span>
+        <svg class="scroll-arrow" width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true">
+          <path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <div class="cosmos-progress-track">
           <div class="cosmos-progress-fill" data-cosmos-progress></div>
           <div class="cosmos-progress-dots" data-cosmos-dots></div>
