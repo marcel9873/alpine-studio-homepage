@@ -662,7 +662,14 @@
       // alpha:true. Painting our own navy as the opaque clear color avoids that entirely.
       var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
       renderer.setClearColor(0x0e1a2b, 1);
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      // updateStyle=false: only set the internal render-resolution, and leave the
+      // canvas's displayed CSS size to the stylesheet (width/height:100% within
+      // an inset:0 parent). Letting setSize also drive the CSS size pins it to
+      // whatever window.innerWidth/Height happened to read at this exact moment —
+      // on iOS Safari that can be a transient pre-settle value (before the
+      // dynamic toolbar finishes collapsing), leaving the canvas visibly
+      // narrower than the viewport with no later resize event to correct it.
+      renderer.setSize(window.innerWidth, window.innerHeight, false);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 0.5;
@@ -1002,7 +1009,7 @@
       window.addEventListener('resize', function(){
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(window.innerWidth, window.innerHeight, false);
         composer.setSize(window.innerWidth, window.innerHeight);
       });
     }
