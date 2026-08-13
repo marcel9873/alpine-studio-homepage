@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title data-en="Alpine Studio — Websites for companies that want to make an impact">Alpine Studio — Websites für Unternehmen, die etwas bewegen wollen</title>
 <meta name="description" content="Alpine Studio entwirft und entwickelt Websites für Unternehmen: von Konzept und Design bis Launch und laufender Betreuung." data-en="Alpine Studio designs and builds websites for companies: from concept and design to launch and ongoing support.">
 <link rel="icon" type="image/png" href="favicon.png">
@@ -73,7 +73,11 @@
     width:100%;
     max-width:var(--max-width);
     margin-inline:auto;
-    padding-inline:var(--space-3);
+    /* viewport-fit=cover lets content extend under the iPhone notch/rounded
+       corners (needed so backgrounds go fully edge-to-edge in landscape) —
+       env() then pads actual content back off that area so text/buttons
+       don't sit underneath it. 0px fallback for browsers without env(). */
+    padding-inline:calc(var(--space-3) + env(safe-area-inset-left, 0px)) calc(var(--space-3) + env(safe-area-inset-right, 0px));
   }
 
   /* Skip link */
@@ -169,7 +173,7 @@
     align-items:center;
     padding-block:var(--space-2);
     max-width:none;
-    padding-inline:var(--space-5);
+    padding-inline:calc(var(--space-5) + env(safe-area-inset-left, 0px)) calc(var(--space-5) + env(safe-area-inset-right, 0px));
   }
   .logo{
     grid-column:1;
@@ -269,7 +273,7 @@
   }
 
   @media (max-width: 480px){
-    .nav-bar{ padding-inline:var(--space-2); }
+    .nav-bar{ padding-inline:calc(var(--space-2) + env(safe-area-inset-left, 0px)) calc(var(--space-2) + env(safe-area-inset-right, 0px)); }
     .logo{ font-size:1rem; gap:6px; }
     .logo .mark{ width:22px; height:22px; }
     .nav-actions{ gap:6px; }
