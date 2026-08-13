@@ -358,6 +358,23 @@
     margin-top:var(--space-4);
   }
   .cosmos-chapter.center .hero-actions{ justify-content:center; }
+
+  /* Landscape phones: short viewport, and this section can't scroll (its
+     wheel/touch handlers drive chapter pagination instead), so oversized
+     type/spacing has nowhere to go but off-screen. Only applies once the
+     fixed cosmos scene is active — the static fallback scrolls normally,
+     so it doesn't need compacting. */
+  @media (max-height: 500px){
+    .cosmos-enhanced .eyebrow{ font-size:0.7rem; }
+    .cosmos-enhanced .cosmos-title{
+      font-size:clamp(1.6rem, 1.2rem + 2.4vw, 2.6rem);
+      margin-top:8px;
+    }
+    .cosmos-enhanced .cosmos-subtitle{ margin-top:10px; }
+    .cosmos-enhanced .cosmos-subtitle .subtitle-line{ font-size:0.95rem; }
+    .cosmos-enhanced .hero-actions{ margin-top:14px; }
+    .cosmos-enhanced .btn{ padding:0.6em 1.2em; font-size:0.85rem; }
+  }
   .hero-stats{
     display:flex;
     flex-wrap:wrap;
@@ -405,6 +422,13 @@
   .cosmos-enhanced .cosmos-chapter{
     position:absolute;
     inset:0;
+    /* Centers the text in the space below the header, not the full fixed
+       viewport — var(--header-height) is measured/kept in sync by JS.
+       padding-bottom must be reset too: the base (non-enhanced) rule's
+       padding-block:var(--space-7) would otherwise still apply to the
+       bottom side, unevenly shrinking the centering area upward. */
+    padding-top:var(--header-height, 70px);
+    padding-bottom:0;
     min-height:0;
     opacity:0;
     pointer-events:none;
@@ -631,6 +655,21 @@
     if (reduceMotion || !hasWebGL()) return; // static, stacked, fully readable fallback stays
 
     document.documentElement.classList.add('cosmos-enhanced');
+
+    // Chapter text centers itself in the space *below* the header (see
+    // .cosmos-enhanced .cosmos-chapter's padding-top), not the full fixed
+    // viewport — otherwise, on a short landscape screen the header (taller
+    // once the chapter links wrap to their own row) can crowd or clip the
+    // text, since this section blocks normal scrolling as a fallback.
+    // Header height isn't a fixed constant (it wraps at different widths
+    // and content lengths can vary per language), so it's measured instead
+    // of guessed at in CSS.
+    var headerEl = document.querySelector('header');
+    function syncHeaderHeight(){
+      if (headerEl) document.documentElement.style.setProperty('--header-height', headerEl.offsetHeight + 'px');
+    }
+    syncHeaderHeight();
+    window.addEventListener('resize', syncHeaderHeight);
 
     initCosmos().catch(function(err){
       console.warn('Cosmos-Intro (3D) konnte nicht geladen werden, statische Ansicht bleibt aktiv.', err);
