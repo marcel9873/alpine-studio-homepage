@@ -344,8 +344,15 @@
      is nothing here for the browser itself to scroll. */
   .cosmos-enhanced .cosmos-intro{ position:fixed; inset:0; height:100vh; }
   .cosmos-enhanced .cosmos-pin{ position:relative; height:100%; }
-  .cosmos-enhanced .cosmos-canvas{ display:block; }
-  .cosmos-enhanced .cosmos-fallback-glow{ display:none; }
+  /* Three.js loads its modules from a CDN at runtime, so there's a brief window
+     after .cosmos-enhanced is applied where the scene isn't built yet. Keep the
+     fallback glow up and the canvas invisible until .cosmos-ready lands (added
+     right before the first real render), then crossfade — instead of hiding the
+     glow immediately and leaving a flash of flat background with no mountains. */
+  .cosmos-enhanced .cosmos-canvas{ display:block; opacity:0; transition:opacity 0.7s ease; }
+  .cosmos-enhanced.cosmos-ready .cosmos-canvas{ opacity:1; }
+  .cosmos-enhanced .cosmos-fallback-glow{ transition:opacity 0.7s ease; }
+  .cosmos-enhanced.cosmos-ready .cosmos-fallback-glow{ opacity:0; pointer-events:none; }
   .cosmos-enhanced .cosmos-chapter{
     position:absolute;
     inset:0;
@@ -942,6 +949,8 @@
 
         composer.render();
       }
+      composer.render();
+      document.documentElement.classList.add('cosmos-ready');
       animate();
 
       window.addEventListener('resize', function(){
